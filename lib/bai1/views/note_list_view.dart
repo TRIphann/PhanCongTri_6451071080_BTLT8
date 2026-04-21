@@ -69,9 +69,7 @@ class _NoteListViewState extends State<NoteListView> {
   Future<void> _navigateToForm({Note? note}) async {
     final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (context) => NoteFormView(note: note),
-      ),
+      MaterialPageRoute(builder: (context) => NoteFormView(note: note)),
     );
     if (result == true) {
       _loadNotes(); // Refresh danh sách
@@ -87,45 +85,73 @@ class _NoteListViewState extends State<NoteListView> {
         foregroundColor: Colors.white,
         centerTitle: true,
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _notes.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.note_add, size: 80, color: Colors.grey[300]),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Chưa có ghi chú nào',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[500],
+      body: Column(
+        children: [
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _notes.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.note_add, size: 80, color: Colors.grey[300]),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Chưa có ghi chú nào',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[500],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Nhấn nút + để thêm ghi chú mới',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[400],
+                        const SizedBox(height: 8),
+                        Text(
+                          'Nhấn nút + để thêm ghi chú mới',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[400],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      bottom: 8,
+                      left: 0,
+                      right: 0,
+                    ),
+                    itemCount: _notes.length,
+                    itemBuilder: (context, index) {
+                      final note = _notes[index];
+                      return NoteCard(
+                        note: note,
+                        onTap: () => _navigateToForm(note: note),
+                        onDelete: () => _deleteNote(note),
+                      );
+                    },
                   ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemCount: _notes.length,
-                  itemBuilder: (context, index) {
-                    final note = _notes[index];
-                    return NoteCard(
-                      note: note,
-                      onTap: () => _navigateToForm(note: note),
-                      onDelete: () => _deleteNote(note),
-                    );
-                  },
-                ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              border: Border(top: BorderSide(color: Colors.grey[300]!)),
+            ),
+            child: Text(
+              'Phan Công Trí - 6451071080',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToForm(),
         backgroundColor: Colors.blue[700],

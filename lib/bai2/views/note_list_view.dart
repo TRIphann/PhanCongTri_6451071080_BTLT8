@@ -83,9 +83,7 @@ class _NoteListViewState extends State<NoteListView> {
   Future<void> _navigateToNoteForm({Note? note}) async {
     final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (context) => NoteFormView(note: note),
-      ),
+      MaterialPageRoute(builder: (context) => NoteFormView(note: note)),
     );
     if (result == true) {
       _loadData();
@@ -96,9 +94,7 @@ class _NoteListViewState extends State<NoteListView> {
   Future<void> _navigateToCategoryForm() async {
     final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (context) => const CategoryFormView(),
-      ),
+      MaterialPageRoute(builder: (context) => const CategoryFormView()),
     );
     if (result == true) {
       _loadData();
@@ -146,20 +142,22 @@ class _NoteListViewState extends State<NoteListView> {
                     ),
                   ),
                   // Các nút filter theo danh mục
-                  ..._categories.map((category) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: FilterChip(
-                          label: Text(category.name),
-                          selected: _selectedFilter?.id == category.id,
-                          selectedColor: Colors.teal[200],
-                          onSelected: (selected) {
-                            setState(() {
-                              _selectedFilter = selected ? category : null;
-                            });
-                            _loadData();
-                          },
-                        ),
-                      )),
+                  ..._categories.map(
+                    (category) => Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: FilterChip(
+                        label: Text(category.name),
+                        selected: _selectedFilter?.id == category.id,
+                        selectedColor: Colors.teal[200],
+                        onSelected: (selected) {
+                          setState(() {
+                            _selectedFilter = selected ? category : null;
+                          });
+                          _loadData();
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -170,45 +168,61 @@ class _NoteListViewState extends State<NoteListView> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _notes.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.note_add,
-                                size: 80, color: Colors.grey[300]),
-                            const SizedBox(height: 16),
-                            Text(
-                              _selectedFilter != null
-                                  ? 'Không có ghi chú trong danh mục này'
-                                  : 'Chưa có ghi chú nào',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Nhấn nút + để thêm ghi chú mới',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[400],
-                              ),
-                            ),
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.note_add, size: 80, color: Colors.grey[300]),
+                        const SizedBox(height: 16),
+                        Text(
+                          _selectedFilter != null
+                              ? 'Không có ghi chú trong danh mục này'
+                              : 'Chưa có ghi chú nào',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[500],
+                          ),
                         ),
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        itemCount: _notes.length,
-                        itemBuilder: (context, index) {
-                          final note = _notes[index];
-                          return NoteCard(
-                            note: note,
-                            onTap: () => _navigateToNoteForm(note: note),
-                            onDelete: () => _deleteNote(note),
-                          );
-                        },
-                      ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Nhấn nút + để thêm ghi chú mới',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    itemCount: _notes.length,
+                    itemBuilder: (context, index) {
+                      final note = _notes[index];
+                      return NoteCard(
+                        note: note,
+                        onTap: () => _navigateToNoteForm(note: note),
+                        onDelete: () => _deleteNote(note),
+                      );
+                    },
+                  ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              border: Border(top: BorderSide(color: Colors.grey[300]!)),
+            ),
+            child: Text(
+              'Phan Công Trí - 6451071080',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
         ],
       ),
